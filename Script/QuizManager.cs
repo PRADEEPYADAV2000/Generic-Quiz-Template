@@ -18,17 +18,17 @@ public class QuizManager : MonoBehaviour
 
     public Question[] questions;
 
-          // Array of questions for the quiz
-    private int currentQuestionIndex = 0;   // To keep track of the current question
+        
+    private int currentQuestionIndex = 0;   
 
-    public Image questionImage;             // Image UI element for the question
-    public Text feedbackText;               // Optional feedback text (Correct/Wrong)
-    public Transform correctListParent;     // Parent object for correct answers list
-    public Transform wrongListParent;       // Parent object for wrong answers list
-    public GameObject listItemPrefab;       // Prefab for list item (Text element)
+    public Image questionImage;            
+    public Text feedbackText;               
+    public Transform correctListParent;     
+    public Transform wrongListParent;       
+    public GameObject listItemPrefab;      
 
-    private List<string> correctAnswersList = new List<string>(); // List of correct answers
-    private List<string> wrongAnswersList = new List<string>();   // List of wrong answers
+    private List<string> correctAnswersList = new List<string>(); 
+    private List<string> wrongAnswersList = new List<string>();   
 
     void Start()
     {
@@ -37,23 +37,23 @@ public class QuizManager : MonoBehaviour
 
     public void ShowQuestion()
     {
-        // Get the current question
+       
         Question currentQuestion = questions[currentQuestionIndex];
 
-        // Set the question image
+        
         questionImage.sprite = currentQuestion.questionImage;
 
-        // Enable answer buttons and set listeners for the current question
+        
         for (int i = 0; i < currentQuestion.options.Length; i++)
         {
-            int index = i;  // Local copy for the button click listener
+            int index = i;  
             Button optionButton = currentQuestion.options[i];
-            optionButton.gameObject.SetActive(true);  // Ensure buttons are enabled
+            optionButton.gameObject.SetActive(true); 
             optionButton.onClick.RemoveAllListeners();
             optionButton.onClick.AddListener(() => CheckAnswer(index, currentQuestion));
         }
 
-        // Clear feedback text before showing new question
+      
         if (feedbackText != null)
         {
             feedbackText.text = "";
@@ -62,13 +62,13 @@ public class QuizManager : MonoBehaviour
 
     void CheckAnswer(int selectedAnswerIndex, Question currentQuestion)
     {
-        // Disable all answer buttons for this question
+      
         foreach (Button button in currentQuestion.options)
         {
-            button.gameObject.SetActive(false);  // Hide buttons after selection
+            button.gameObject.SetActive(false); 
         }
 
-        // Check if the answer is correct or wrong
+       
         if (selectedAnswerIndex == currentQuestion.correctAnswerIndex)
         {
             feedbackText.text = "Correct!";
@@ -80,11 +80,11 @@ public class QuizManager : MonoBehaviour
             wrongAnswersList.Add("Question " + (currentQuestionIndex + 1) + ": Wrong");
         }
 
-        // Update the list UI
+        
         UpdateLists();
 
-        // Automatically move to the next question after a short delay
-        Invoke("NextQuestion", 1.5f); // 1.5 seconds delay to show feedback
+       
+        Invoke("NextQuestion", 1.5f); 
     }
 
     void NextQuestion()
@@ -94,10 +94,10 @@ public class QuizManager : MonoBehaviour
         if (currentQuestionIndex >= questions.Length)
         {
             Debug.Log("Quiz Finished!");
-            currentQuestionIndex = 0;  // Reset to the first question (or end the quiz)
+            currentQuestionIndex = 0;  
         }
 
-        // Show the next question
+       
         ShowQuestion();
     }
 
@@ -108,7 +108,7 @@ public class QuizManager : MonoBehaviour
             SceneManager.LoadScene("Menu");
             return;
         }
-        // Clear existing list items
+        
         foreach (Transform child in correctListParent)
         {
             Destroy(child.gameObject);
@@ -118,14 +118,14 @@ public class QuizManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // Populate the correct answers list
+       
         foreach (string correctAnswer in correctAnswersList)
         {
             GameObject listItem = Instantiate(listItemPrefab, correctListParent);
             listItem.GetComponent<Text>().text = correctAnswer;
         }
 
-        // Populate the wrong answers list
+        
         foreach (string wrongAnswer in wrongAnswersList)
         {
             GameObject listItem = Instantiate(listItemPrefab, wrongListParent);
